@@ -67,6 +67,7 @@ class Rectangle {
     this.origin = const Point(0, 0),
     this.width = 0,
   });
+
   //可选位置参数
   void set(int height, [Point origin = const Point(0, 0), int width]) {
     this.height = height;
@@ -74,3 +75,62 @@ class Rectangle {
     this.width = width;
   }
 }
+
+//抽象类
+abstract class Shape {
+  //抽象方法，没有方法体
+  num get area;
+
+  void a() {}
+}
+
+//Flutter是没有interface的，但是Flutter中的每个类都是一个隐式的接口，这个接口包含类里的所有成员变量，以及定义的方法。
+//如果有一个类 A,你想让类B拥有A的API，但又不想拥有A里的实现，那么你就应该把A当做接口，类B implements 类A.
+class Circle1 implements Shape {
+//如果使用implements 关键字，则必须重写父类的方法
+  @override
+  // TODO: implement area
+  num get area => null;
+
+  @override
+  void a() {
+    // TODO: implement a
+  }
+}
+
+//使用extends 关键字，则无需重写父类方法，但是必须重写抽象方法
+class Circle2 extends Shape {
+  @override
+  // TODO: implement area
+  num get area => null;
+}
+//mixins，非继承
+class Circle3 with Shape{
+  @override
+  // TODO: implement area
+  num get area => null;
+}
+//on 关键字，用于限定，如果要mixin Shape1 必须先继承Shape或实现Shape接口
+mixin Shape1 on Shape{
+
+}
+class Circle4 extends Shape with Shape1{
+  @override
+  // TODO: implement area
+  num get area => null;
+}
+
+class Circle5 implements Shape {
+  @override
+  void a() {
+    // TODO: implement a
+  }
+
+  @override
+  // TODO: implement area
+  num get area => null;
+
+}
+
+
+
