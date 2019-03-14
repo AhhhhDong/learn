@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:quiver/strings.dart';
 
 //Main函数
 //void main(){}
@@ -78,6 +79,8 @@ class Rectangle {
 
 //抽象类
 abstract class Shape {
+  num x;
+
   //抽象方法，没有方法体
   num get area;
 
@@ -87,15 +90,16 @@ abstract class Shape {
 //Flutter是没有interface的，但是Flutter中的每个类都是一个隐式的接口，这个接口包含类里的所有成员变量，以及定义的方法。
 //如果有一个类 A,你想让类B拥有A的API，但又不想拥有A里的实现，那么你就应该把A当做接口，类B implements 类A.
 class Circle1 implements Shape {
-//如果使用implements 关键字，则必须重写父类的方法
+//如果使用implements 关键字，则必须重写父类的方法和变量
   @override
-  // TODO: implement area
   num get area => null;
 
   @override
-  void a() {
-    // TODO: implement a
-  }
+  void a() {}
+
+  //这里变量也是需要覆写的
+  @override
+  num x;
 }
 
 //使用extends 关键字，则无需重写父类方法，但是必须重写抽象方法
@@ -104,33 +108,80 @@ class Circle2 extends Shape {
   // TODO: implement area
   num get area => null;
 }
+
 //mixins，非继承
-class Circle3 with Shape{
+class Circle3 with Shape {
   @override
   // TODO: implement area
   num get area => null;
 }
+
 //on 关键字，用于限定，如果要mixin Shape1 必须先继承Shape或实现Shape接口
-mixin Shape1 on Shape{
+mixin Shape1 on Shape {}
 
-}
-class Circle4 extends Shape with Shape1{
+class Circle4 extends Shape with Shape1 {
   @override
   // TODO: implement area
   num get area => null;
 }
 
-class Circle5 implements Shape {
-  @override
-  void a() {
-    // TODO: implement a
+//工厂模式,允许在最外层作用域实现一个工厂方法
+Shape shapeFactory(int type) {
+  if (type == 1) return Circle1();
+  if (type == 2) return Circle2();
+  throw "can\'t create";
+}
+
+//工厂模式在抽象类中通过factory 关键字增加一个工厂模式的构造方法
+abstract class Shape2 {
+  //工厂模式的构造方法
+  factory Shape2(int type) {
+    return null;
   }
-
-  @override
-  // TODO: implement area
-  num get area => null;
-
 }
 
+//这里可以用*代表length个a
+String scream(int length) => "A${'a' * length}h";
 
+printScream() {
+  const List<int> values = [1, 2, 3, 5, 6];
+  for (int i = 0; i < values.length; i++) {
+    int length = values[i];
+    //这里可以直接把函数传入
+    print(scream(length));
+    var shape1 = shapeFactory(1);
+    var shape2 = Shape2(1);
+    //方法联级调用 ..
+    shape1..a()..a();
+  }
+  //使用for in
+  for (var length in values) {
+    print(scream(length));
+  }
+  //使用lambda
+  values.map(scream).forEach(print);
+}
 
+//在dart中，if中只有参数为bool并且true，才为true
+//false
+bool a = (null);
+//false
+bool a1 = (printScream());
+
+void checkStringNull(String s) {
+  if (s?.isNotEmpty) {
+    print("string is not empty");
+  }
+  if (!s?.isNotEmpty) {
+    print("string si Empty");
+  }
+  //1
+  ((x, y) => x == null ? y : x)(1, 2);
+  //当x = null 则为2 ，否则为1
+  int x = null;
+  int y = 2;
+  //当x为null 则 z = y ，否则z = x;
+  var z = x ?? y;
+  //当z 等于null 则，把z赋值为1
+  z ??= 1;
+}
