@@ -12,6 +12,9 @@ class ListApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('这是一个list的demo'),
+          actions: <Widget>[
+            new IconButton(icon: Icon(Icons.list), onPressed: _pushSaved)
+          ],
         ),
         body: Container(
           child: _list,
@@ -23,6 +26,23 @@ class ListApp extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _pushSaved() {
+    Navigator.of(_list.state.context).push(MaterialPageRoute<void>(
+      builder: (BuildContext context) {
+        final Iterable<ListTile> tiles =
+            _list.state._favoriteSet.map((WordPair pair) {
+          return ListTile(title: Text(pair.asPascalCase));
+        });
+        final List<Widget> divided =
+            ListTile.divideTiles(context: context, tiles: tiles).toList();
+        return Scaffold(
+          appBar: AppBar(title: const Text('收藏列表')),
+          body: new ListView(children: divided),
+        );
+      },
+    ));
   }
 }
 
@@ -54,7 +74,7 @@ class RandomWordsState extends State<RandomWords> {
         isFavorite ? Icons.favorite : Icons.favorite_border,
         color: isFavorite ? Colors.red : null,
       ),
-      onTap: _addFavorite(wordPair, isFavorite),
+      onTap: () => _addFavorite(wordPair, isFavorite),
     );
   }
 
