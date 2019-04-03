@@ -184,4 +184,38 @@ void checkStringNull(String s) {
   var z = x ?? y;
   //当z 等于null 则，把z赋值为1
   z ??= 1;
+
+  //补充
+  //这类三个单引号或者双引号包裹的字符串，里面可以换行
+  const helloWorld = """hello 
+  World""";
+
+  //字符串和字符串之间自动拼接,需要注意的是，两个字符串中间不能加一个空字符串
+  const strAdd = "fasf" "fsf";
+//  const strAdd = "fasf""""fsf";这里会报错
+
+  //字符串前面加r 可以使字符串中的\不再转义
+  const nextLine = r"换行符:\n";
+
+  //函数闭包
+  Subtract subtract(int a) {
+    return (int b) => a - b;
+  }
+
+  void subtractTest() {
+    final x = subtract(5);
+    print(x(3));
+  }
+
+  //函数别名
+  int subtract1(int a, int b) => a - b;
+  typeDefTest() {
+    var test = subtract1(1, 2);
+    print(test is Function);
+    print(test is Add);
+  }
 }
+
+//函数别名，必须申明在类外面。。。吗？
+typedef int Add(int a, int b);
+typedef int Subtract(int a);
